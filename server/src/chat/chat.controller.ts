@@ -7,8 +7,9 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import * as fs from 'fs/promises';
+import * as fs from 'fs/promises'; // Поменяли на fs/promises
 import * as path from 'path';
+import { PdfOcrService } from './services/pdf-ocr.service'; // Импортируем PdfOcrService
 
 @Controller('chat')
 export class ChatController {
@@ -42,7 +43,7 @@ export class ChatController {
 
     try {
       const text = await this.pdfOcrService.parsePdf(
-        fs.readFileSync(file.path), // Чтение файла с диска
+        await fs.readFile(file.path), // Чтение файла с диска
         file.originalname,
       );
       console.log('✅ Text successfully recognized');
