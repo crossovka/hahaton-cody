@@ -1,13 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {
-	uploadPdfStart,
-	uploadPdfSuccess,
-	uploadPdfFailure,
-} from './slice';
+import { uploadPdfStart, uploadPdfSuccess, uploadPdfFailure } from './slice';
 
-// Получаем API_URL из переменных окружения
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}chat/upload-pdf`; // Формируем URL
+// Get API_URL from environment variables
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}chat/upload-pdf`;
 
 export const uploadPdf = createAsyncThunk(
 	'chat/uploadPdf',
@@ -18,18 +14,16 @@ export const uploadPdf = createAsyncThunk(
 			const formData = new FormData();
 			formData.append('file', data.file);
 
-			// Отправка запроса на сервер
+			// Send request to server
 			const response = await axios.post(API_URL, formData, {
 				headers: { 'Content-Type': 'multipart/form-data' },
 			});
 
-			// Ответ от сервера
-			const message = response.data.message; // Сообщение от сервера
-			const extractedText = response.data.file
-				? `Извлеченный файл: ${response.data.file}`
-				: null; // Файл (можно получить имя файла)
+			// Server response
+			const message = response.data.message; // Message from server
+			const extractedText = response.data.file; // Text from each page of the PDF
 
-			// Диспатчим успех
+			// Dispatch success
 			dispatch(uploadPdfSuccess({ message, extractedText }));
 
 			return { message, extractedText };

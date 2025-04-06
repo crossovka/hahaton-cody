@@ -1,14 +1,16 @@
-import { MulterModule } from '@nestjs/platform-express';
 import { Module } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
 import { ChatController } from './chat.controller';
+import { PdfOcrService } from './services/pdf-ocr.service';
 
 @Module({
   imports: [
     MulterModule.register({
-      dest: './uploads', // Папка для сохранения файлов
-      limits: { fileSize: 10 * 1024 * 1024 }, // Ограничение на 10MB
+      dest: './uploads', // Папка для временного хранения
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB лимит
     }),
   ],
   controllers: [ChatController],
+  providers: [PdfOcrService],
 })
 export class ChatModule {}

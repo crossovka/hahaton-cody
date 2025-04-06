@@ -2,6 +2,18 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;
+
+	h4 {
+		font-size: 18px;
+		margin-bottom: 10px;
+		font-weight: bold;
+	}
+
+	pre {
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		font-family: 'Courier New', monospace;
+	}
 }
 
 .leftBlock {
@@ -61,4 +73,15 @@
 .pdfPreview h3 {
 	font-size: 18px;
 	margin-bottom: 10px;
+}
+
+.pages {
+	margin-top: 20px;
+}
+
+.page {
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
 }

@@ -1,5 +1,5 @@
-'use client'
-import { FC, useState } from 'react';
+'use client';
+import { FC, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '@/redux/store';
 import { uploadPdf } from '@/redux/slices/chat/asyncActions';
@@ -13,6 +13,13 @@ const ChatPage: FC = () => {
 	const { loading, error, extractedText, serverMessage } = useSelector(
 		(state: RootState) => state.chat
 	);
+
+	// Логируем извлечённый текст
+	useEffect(() => {
+		if (extractedText) {
+			console.log('Text received from server:', extractedText);
+		}
+	}, [extractedText]);
 
 	const handleFileSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
@@ -33,9 +40,9 @@ const ChatPage: FC = () => {
 		<div className={styles.container}>
 			{/* Левый блок с кнопкой для прикрепления файла */}
 			<div className={styles.leftBlock}>
-				<h1>Добро пожаловать в чат</h1>
+				<h1>Welcome to the Chat</h1>
 				<form onSubmit={handleFileSubmit} className={styles.form}>
-					<label htmlFor="pdfInput">Прикрепите PDF файл</label>
+					<label htmlFor="pdfInput">Attach PDF file</label>
 					<input
 						type="file"
 						id="pdfInput"
@@ -48,45 +55,50 @@ const ChatPage: FC = () => {
 						className={styles.submitButton}
 						disabled={loading}
 					>
-						{loading ? 'Загрузка...' : 'Отправить'}
+						{loading ? 'Uploading...' : 'Submit'}
 					</button>
 
 					{pdfFile && (
 						<div className={styles.pdfPreview}>
-							<h3>Предпросмотр PDF</h3>
+							<h3>PDF Preview</h3>
 							<object
 								data={URL.createObjectURL(pdfFile)}
 								type="application/pdf"
 								width="100%"
 								height="600px"
 							>
-								<p>Ваш браузер не поддерживает PDF-просмотр.</p>
+								<p>Your browser does not support PDF preview.</p>
 							</object>
 						</div>
 					)}
 				</form>
 			</div>
 
-			{/* Правый блок с сообщением от сервера и извлеченным текстом */}
+			{/* Правый блок с сообщением от сервера и извлечённым текстом */}
 			<div className={styles.rightBlock}>
-				<h1>Добро пожаловать в чат</h1>
+				<h1>Welcome to the Chat</h1>
 
 				{/* Сообщение об ошибке */}
 				{error && <div className={styles.errorMessage}>{error}</div>}
 
 				{/* Сообщение от сервера */}
 				{serverMessage && (
-					<div className={styles.serverMessage}>
-						<h3>Сообщение от сервера:</h3>
-						<p>{serverMessage}</p> {/* Отображаем сообщение от сервера */}
-					</div>
+					<div className={styles.serverMessage}>{serverMessage}</div>
 				)}
 
-				{/* Вывод извлеченного текста */}
-				{extractedText && (
+				{/* Выводим извлечённый текст */}
+				{extractedText && extractedText.length > 0 && (
 					<div className={styles.extractedText}>
-						<h3>Извлеченный текст:</h3>
-						<p>{extractedText}</p>
+						<h3>Extracted Text:</h3>
+						<div className={styles.pages}>
+							{extractedText.map((page, index) =>
+								page.trim() ? ( // Проверяем, что текст страницы не пустой
+									<div key={index} className={styles.page}>
+										<pre>{page}</pre>
+									</div>
+								) : null
+							)}
+						</div>
 					</div>
 				)}
 			</div>
